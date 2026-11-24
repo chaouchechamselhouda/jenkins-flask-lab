@@ -3,6 +3,7 @@ pipeline {
     agent any
 
     stages {
+
         stage('Checkout') {
             steps {
                 git branch: 'main',
@@ -12,7 +13,14 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh 'docker build -f "$WORKSPACE/Dockerfile" -t jenkins-flask-app "$WORKSPACE"'
+                sh '''
+                    BUILD_DIR=/home/jenkins/jenkins-flask-build
+                    rm -rf "$BUILD_DIR"
+                    mkdir -p "$BUILD_DIR"
+                    cp Dockerfile app.py requirements.txt "$BUILD_DIR"/
+                    cp -r tests "$BUILD_DIR"/
+                    docker build -t jenkins-flask-app "$BUILD_DIR"
+                '''
             }
         }
 
@@ -38,3 +46,4 @@ pipeline {
         }
     }
 }
+
