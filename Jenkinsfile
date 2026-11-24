@@ -12,7 +12,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh 'docker build -t jenkins-flask-app .'
+                sh 'docker build -f "$WORKSPACE/Dockerfile" -t jenkins-flask-app "$WORKSPACE"'
             }
         }
 
